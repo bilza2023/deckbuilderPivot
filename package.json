@@ -1,0 +1,20 @@
+{
+  "name": "deckbuilderpivot",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "A json generator for https://taleem.help presentations",
+  "main": "DeckBuilder.js",
+  "scripts": {
+
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bilza2023/deckbuilderPivot.git"
+  },
+  "author": "Bilal Tariq",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bilza2023/deckbuilderPivot/issues"
+  },
+  "homepage": "https//:taleem.help"
+}
