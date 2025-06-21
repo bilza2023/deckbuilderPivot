@@ -18,13 +18,6 @@ export class DeckBuilder {
     this.background = background;
   }
 
-  // build() {
-  //   return {
-  //     theme: this.theme,
-  //     background: this.background,
-  //     slides: this.slides.toJSON()
-  //   };
-  // }
   build() {
     return this.slides.toJSON();
   }

@@ -1,7 +1,7 @@
 {
-  "name": "deckbuilderpivot",
+  "name": "pivot-deckbuilder",
   "type": "module",
-  "version": "0.1.0",
+  "version": "0.0.9",
   "description": "A json generator for https://taleem.help presentations",
   "main": "DeckBuilder.js",
   "scripts": {

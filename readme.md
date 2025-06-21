@@ -1,236 +1,188 @@
-# Taleem DeckBuilder v0.1.0
 
-A minimalist, production-ready slide deck generator for Taleem.Help presentations.
+# Taleem DeckBuilder v0.3.0 (Timing-Enabled)
+
+A declarative, timing-aware slide deck generator for Taleem.Help presentations.  
+Build clean, structured decks that render perfectly in the Taleem Player — now with full slide and item-level timing.
 
 ---
 
 ## 🚀 Overview
 
-Taleem DeckBuilder is a **JSON-generating library** that outputs slide decks compatible with the Taleem Player. It supports a clean declarative format with no runtime logic, no rendering engine, and no layout engine.
+Taleem DeckBuilder is a **script-based compiler** for educational slide decks.
 
-You can use it to build entire presentations programmatically and export JSON decks that are stable, portable, and render-ready.
+You define:
+- Slide types
+- End times per slide
+- Visibility timing per item
+
+The system automatically tracks slide timing and outputs clean JSON for use in the Player.
 
 ---
 
+## 📦 Exports
+export {
+    DeckBuilder,
+    demo_deck
+}
+
+---
 ## 📦 Installation
 
 ```bash
 npm install deckbuilderpivot
-```
+````
 
 ---
 
-## 📄 Quickstart
+## 📄 Quickstart Example
 
 ```js
 import { DeckBuilder } from "deckbuilderpivot";
+const deckbuilder = new DeckBuilder();
 
-const deck = new DeckBuilder();
-deck.setTheme("royalBlue");
-deck.setBackground({
-  backgroundColor: "#b3d8b4",
-  backgroundImage: "/pivot/defaultBg.png",
-  backgroundImageOpacity: 1.0,
-  pattern: null
-});
-
-deck.s.titleSlide([
-  { name: "title", content: "Welcome to Taleem.help" }
+deckbuilder.s.titleSlide(10, [
+  { name: "title", content: "Welcome to Taleem.Help", showAt: 0 }
 ]);
 
-export const finalDeck = deck.build();
+deckbuilder.s.statistic(20, [
+  { name: "number", content: "95%", showAt: 0 },
+  { name: "label", content: "Success Rate", showAt: 2 }
+]);
+
+deckbuilder.s.imageWithCaption(30, [
+  { name: "image", content: "/pivot/box.webp", showAt: 0 },
+  { name: "caption", content: "Powered by AI", showAt: 1 }
+]);
+
+export const deck = deckbuilder.build();
 ```
 
 ---
 
-## ✅ Features (v0.1.0)
+## ✅ Features
 
-* 13 slide types supported
-* Background + theme set once globally
-* Consistent, clean JSON output
-* Alias-friendly API: `deck.s.slideType()`
-* Passive system: no render logic, no animation, no validation layer yet
-
----
-
-## ⛔ Limitations (v0.1.0)
-
-* No per-slide background overrides
-* No start/end/showAt logic
-* No animations, timing, or sequence controls
-* No Zod validation (coming in v0.2.0)
-* No audio, no Howler, no transitions
+* 🔹 20 structured slide types
+* 🔹 Timing-aware output: `start`, `end`, `showAt`
+* 🔹 Auto-managed sequencing (`start` handled internally)
+* 🔹 Required `showAt` on every item (default: 0)
+* 🔹 Image content is literal — never parsed or validated
+* 🔹 Fully compatible with Taleem Player
 
 ---
 
-## 🧱 Slide Types and Examples
+## ⛔ Limitations
 
-Each slide type uses the same API:
+* ❌ No layout or render logic (only generates JSON)
+* ❌ No slide-level backgrounds yet (global only)
+* ❌ No Zod validation (planned)
+* ❌ No animations or transitions
+* ❌ No support for per-slide theme overrides
+
+---
+
+## 🧱 Slide Types
+
+Each slide is declared using:
 
 ```js
-deck.s.slideType(dataArray);
+deckbuilder.s.slideType(end, [ { name, content, showAt } ]);
 ```
 
-Below is a full list of all 13 supported types with demo data:
+| Type                    | Description                     |
+| ----------------------- | ------------------------------- |
+| `titleSlide`            | One-line title                  |
+| `twoColumnText`         | Side-by-side comparison         |
+| `donutChart`            | Circular percent chart          |
+| `barChart`              | Labeled vertical bars           |
+| `statistic`             | Big number with label           |
+| `table`                 | Data table                      |
+| `imageWithTitle`        | Image + title overlay           |
+| `imageWithCaption`      | Image + small caption           |
+| `imageRightBulletsLeft` | Image right, bullets left       |
+| `imageLeftBulletsRight` | Image left, bullets right       |
+| `quoteSlide`            | Multi-line animated quote       |
+| `imageSlide`            | Full image                      |
+| `cornerWordsSlide`      | 4 words/icons in screen corners |
+| `titleAndSubtitle`      | Title with subtitle             |
+| `bulletList`            | Simple bullet points            |
+| `bigNumber`             | Large stat with label           |
+| `quoteWithImage`        | Quote with author image         |
+| `contactSlide`          | Contact/CTA block               |
 
-### 1. `titleSlide`
+---
+
+## 🖼 Image Rules
+
+* Only use image paths provided manually via `imagesList[]`
+* Paths are treated as-is — no URL parsing, extensions, or folders
+* Fallbacks (if no list provided):
 
 ```js
-deck.s.titleSlide([
-  { name: "title", content: "Welcome to Taleem.help" }
-]);
+[
+  "/pivot/box.webp",
+  "/pivot/defaultBg.png",
+  "/pivot/fbise9physics.webp",
+  "/pivot/banner_brand.png"
+]
 ```
 
-### 2. `twoColumnText`
+---
 
-```js
-deck.s.twoColumnText([
-  { name: "left", content: "Advantages:\n\u2022 Fast\n\u2022 Cheap" },
-  { name: "right", content: "Disadvantages:\n\u2022 Unstable\n\u2022 Short-term" },
-  { name: "title", content: "Pros and Cons" }
-]);
-```
+## 📤 Output Format
 
-### 3. `donutChart`
+Calling `deckbuilder.build()` returns:
 
-```js
-deck.s.donutChart([
-  { name: "percent", content: 72 },
-  { name: "label", content: "Completion" },
-  { name: "color", content: "#4CAF50" }
-]);
-```
-
-### 4. `barChart`
-
-```js
-deck.s.barChart([
-  { name: "title", content: "Student Performance" },
-  { name: "bar", label: "Math", value: 90, color: "#4CAF50" },
-  { name: "bar", label: "Physics", value: 75, color: "#2196F3" },
-  { name: "bar", label: "Chemistry", value: 80, color: "#FFC107" }
-]);
-```
-
-### 5. `statistic`
-
-```js
-deck.s.statistic([
-  { name: "number", content: "95%" },
-  { name: "label", content: "Exam Success Rate" }
-]);
-```
-
-### 6. `table`
-
-```js
-deck.s.table([
+```json
+[
   {
-    name: "table",
-    content: [
-      ["Subject", "Marks", "Grade"],
-      ["Math", "90", "A+"],
-      ["Physics", "85", "A"],
-      ["Chemistry", "88", "A+"]
+    "type": "titleSlide",
+    "start": 0,
+    "end": 10,
+    "data": [
+      { "name": "title", "content": "Welcome", "showAt": 0 }
+    ]
+  },
+  {
+    "type": "statistic",
+    "start": 10,
+    "end": 20,
+    "data": [
+      { "name": "number", "content": "95%", "showAt": 0 },
+      { "name": "label", "content": "Success Rate", "showAt": 2 }
     ]
   }
-]);
+]
 ```
 
-### 7. `imageWithTitle`
-
-```js
-deck.s.imageWithTitle([
-  { name: "image", content: "/pivot/box.webp" },
-  { name: "title", content: "Explore the Universe" }
-]);
-```
-
-### 8. `imageWithCaption`
-
-```js
-deck.s.imageWithCaption([
-  { name: "image", content: "/pivot/fbise9physics.webp" },
-  { name: "caption", content: "Our solar system in a nutshell" }
-]);
-```
-
-### 9. `imageRightBulletsLeft`
-
-```js
-deck.s.imageRightBulletsLeft([
-  { name: "image", content: "/pivot/fbise9physics.webp" },
-  { name: "bullet", content: "First point about the image" },
-  { name: "bullet", content: "Second insight, very sharp" },
-  { name: "bullet", content: "Third takeaway, well said" }
-]);
-```
-
-### 10. `imageLeftBulletsRight`
-
-```js
-deck.s.imageLeftBulletsRight([
-  { name: "image", content: "/pivot/box.webp" },
-  { name: "bullet", content: "This is content Number 1" },
-  { name: "bullet", content: "This is content Number 2" },
-  { name: "bullet", content: "This is content Number 3" }
-]);
-```
-
-### 11. `quoteSlide`
-
-```js
-deck.s.quoteSlide([
-  { name: "quoteLine", content: "Imagination is more important", start: 0 },
-  { name: "quoteLine", content: "than knowledge.", start: 2 },
-  { name: "author", content: "\u2014 Albert Einstein", start: 3 }
-]);
-```
-
-### 12. `imageSlide`
-
-```js
-deck.s.imageSlide([
-  { name: "image", content: "/pivot/fbise9physics.webp" }
-]);
-```
-
-### 13. `cornerWordsSlide`
-
-```js
-deck.s.cornerWordsSlide([
-  { name: "card", icon: "\ud83d\ude80", label: "Explore" },
-  { name: "card", icon: "\ud83d\udee0\ufe0f", label: "Build" },
-  { name: "card", icon: "\ud83d\udcda", label: "Learn" },
-  { name: "card", icon: "\ud83c\udf0d", label: "Share" }
-]);
-```
+This JSON is directly playable in the Taleem frontend.
 
 ---
 
 ## 🧠 Philosophy
 
-Taleem DeckBuilder is not a renderer. It’s not a browser. It’s not a layout engine.
-It’s a **compiler for slides** — a system that produces clean, predictable, supportable data.
+Taleem DeckBuilder is not a renderer.
+It’s not a design tool.
+It’s a compiler — for turning structured content into precisely timed, fully portable slide decks.
 
-It does not break silently. It does not fight you. It does not require perfection to deliver value.
-
-This is your engine for production.
+It is built for scale, not styling.
 
 ---
 
 ## 🔮 Roadmap
 
-* [ ] Zod schema validation (v0.2.0)
-* [ ] `deck.overrideBackground()`
-* [ ] Slide timing: `start`, `end`, `showAt`
-* [ ] Built-in themes + presets
-* [ ] CLI tool to generate decks from templates
-* [ ] GUI deckbuilder playground
+* [ ] Slide-level background overrides
+* [ ] Zod schema validation
+* [ ] Animation scripting (`fadeIn`, `zoom`, `delay`)
+* [ ] Deck metadata (`title`, `grade`, `subject`)
+* [ ] GUI playground for teachers
+* [ ] CLI for batch generation from PDF/text
 
 ---
 
-## 📢 License
+## 📣 License
 
-ISC License — MIT-friendly, free to use.
+ISC License — MIT-compatible
 Built by Bilal Tariq for Taleem.Help.
+
+```
+
