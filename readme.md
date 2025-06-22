@@ -1,8 +1,18 @@
 
-# Taleem DeckBuilder v0.3.0 (Timing-Enabled)
+
+# Taleem DeckBuilder v0.0.9 (Timing-Enabled)
 
 A declarative, timing-aware slide deck generator for Taleem.Help presentations.  
 Build clean, structured decks that render perfectly in the Taleem Player — now with full slide and item-level timing.
+
+###### Under Testing....
+---
+
+## 📦 Installation
+
+```bash
+npm i taleem-pivot-deckbuilder
+````
 
 ---
 
@@ -11,33 +21,31 @@ Build clean, structured decks that render perfectly in the Taleem Player — now
 Taleem DeckBuilder is a **script-based compiler** for educational slide decks.
 
 You define:
-- Slide types
-- End times per slide
-- Visibility timing per item
+
+* Slide types
+* End times per slide
+* Visibility timing per item
 
 The system automatically tracks slide timing and outputs clean JSON for use in the Player.
 
 ---
 
 ## 📦 Exports
+
+```js
 export {
-    DeckBuilder,
-    demo_deck
+  DeckBuilder,
+  demo_deck
 }
-
----
-## 📦 Installation
-
-```bash
-npm install deckbuilderpivot
-````
+```
 
 ---
 
 ## 📄 Quickstart Example
 
 ```js
-import { DeckBuilder } from "deckbuilderpivot";
+import { DeckBuilder } from "taleem-pivot-deckbuilder";
+
 const deckbuilder = new DeckBuilder();
 
 deckbuilder.s.titleSlide(10, [
@@ -61,12 +69,12 @@ export const deck = deckbuilder.build();
 
 ## ✅ Features
 
-* 🔹 20 structured slide types
+* 🔹 18+ structured slide types
 * 🔹 Timing-aware output: `start`, `end`, `showAt`
 * 🔹 Auto-managed sequencing (`start` handled internally)
 * 🔹 Required `showAt` on every item (default: 0)
 * 🔹 Image content is literal — never parsed or validated
-* 🔹 Fully compatible with Taleem Player
+* 🔹 Fully compatible with Taleem Pivot Player
 
 ---
 
@@ -154,35 +162,53 @@ Calling `deckbuilder.build()` returns:
 ]
 ```
 
-This JSON is directly playable in the Taleem frontend.
-
 ---
 
-## 🧠 Philosophy
+## 🧪 Full Deck Example
 
-Taleem DeckBuilder is not a renderer.
-It’s not a design tool.
-It’s a compiler — for turning structured content into precisely timed, fully portable slide decks.
+```js
+import { DeckBuilder } from "taleem-pivot-deckbuilder";
+const deckbuilder = new DeckBuilder();
 
-It is built for scale, not styling.
+deckbuilder.s.titleSlide(10, [
+  { name: "title", content: "Physics Chapter 1", showAt: 0 }
+]);
 
----
+deckbuilder.s.twoColumnText(20, [
+  { name: "title", content: "SI Units", showAt: 0 },
+  { name: "left", content: "Meter\\nKilogram\\nSecond", showAt: 1 },
+  { name: "right", content: "Length\\nMass\\nTime", showAt: 2 }
+]);
 
-## 🔮 Roadmap
+deckbuilder.s.barChart(30, [
+  { name: "bar", label: "Ali", value: 85, color: "#4CAF50", showAt: 0 },
+  { name: "bar", label: "Sara", value: 92, color: "#2196F3", showAt: 2 }
+]);
 
-* [ ] Slide-level background overrides
-* [ ] Zod schema validation
-* [ ] Animation scripting (`fadeIn`, `zoom`, `delay`)
-* [ ] Deck metadata (`title`, `grade`, `subject`)
-* [ ] GUI playground for teachers
-* [ ] CLI for batch generation from PDF/text
+deckbuilder.s.bulletList(40, [
+  { name: "bullet", content: "Modular", showAt: 0 },
+  { name: "bullet", content: "Visual", showAt: 1 },
+  { name: "bullet", content: "Flexible", showAt: 2 }
+]);
+
+deckbuilder.s.cornerWordsSlide(50, [
+  { name: "card", icon: "🔬", label: "Observe", showAt: 0 },
+  { name: "card", icon: "📏", label: "Measure", showAt: 0 },
+  { name: "card", icon: "🧪", label: "Experiment", showAt: 0 },
+  { name: "card", icon: "💡", label: "Conclude", showAt: 0 }
+]);
+
+deckbuilder.s.quoteSlide(60, [
+  { name: "quoteLine", content: "Knowledge is power.", showAt: 0 },
+  { name: "author", content: "— Francis Bacon", showAt: 1 }
+]);
+
+export const deck = deckbuilder.build();
+```
 
 ---
 
 ## 📣 License
 
 ISC License — MIT-compatible
-Built by Bilal Tariq for Taleem.Help.
-
-```
-
+Built by Taleem.Help
