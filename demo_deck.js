@@ -1,4 +1,4 @@
-import { DeckBuilder } from "deckbuilderpivot";
+import { DeckBuilder } from "./index";
 const deckbuilder = new DeckBuilder();
 
 deckbuilder.s.titleSlide(10, [

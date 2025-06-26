@@ -1,11 +1,11 @@
 
-
 # Taleem DeckBuilder v0.0.9 (Timing-Enabled)
 
 A declarative, timing-aware slide deck generator for Taleem.Help presentations.  
 Build clean, structured decks that render perfectly in the Taleem Player — now with full slide and item-level timing.
 
-###### Under Testing....
+###### Under Testing...
+
 ---
 
 ## 📦 Installation
@@ -26,7 +26,7 @@ You define:
 * End times per slide
 * Visibility timing per item
 
-The system automatically tracks slide timing and outputs clean JSON for use in the Player.
+The system automatically tracks timing and outputs clean JSON for the Player.
 
 ---
 
@@ -39,7 +39,12 @@ export {
 }
 ```
 
----
+
+## 📦 Player is Available At
+
+```bash
+npm i npm i taleem-pivot-player
+````
 
 ## 📄 Quickstart Example
 
@@ -73,7 +78,7 @@ export const deck = deckbuilder.build();
 * 🔹 Timing-aware output: `start`, `end`, `showAt`
 * 🔹 Auto-managed sequencing (`start` handled internally)
 * 🔹 Required `showAt` on every item (default: 0)
-* 🔹 Image content is literal — never parsed or validated
+* 🔹 Image paths passed as-is — not parsed
 * 🔹 Fully compatible with Taleem Pivot Player
 
 ---
@@ -84,7 +89,7 @@ export const deck = deckbuilder.build();
 * ❌ No slide-level backgrounds yet (global only)
 * ❌ No Zod validation (planned)
 * ❌ No animations or transitions
-* ❌ No support for per-slide theme overrides
+* ❌ No per-slide theme overrides
 
 ---
 
@@ -116,14 +121,15 @@ deckbuilder.s.slideType(end, [ { name, content, showAt } ]);
 | `bigNumber`             | Large stat with label           |
 | `quoteWithImage`        | Quote with author image         |
 | `contactSlide`          | Contact/CTA block               |
+| `eq`                    | Custom math-focused slide       |
 
 ---
 
 ## 🖼 Image Rules
 
-* Only use image paths provided manually via `imagesList[]`
-* Paths are treated as-is — no URL parsing, extensions, or folders
-* Fallbacks (if no list provided):
+* Only use paths from a given `imagesList[]`
+* Paths are treated as-is — no parsing or guessing
+* If no list provided, use:
 
 ```js
 [
@@ -148,15 +154,6 @@ Calling `deckbuilder.build()` returns:
     "end": 10,
     "data": [
       { "name": "title", "content": "Welcome", "showAt": 0 }
-    ]
-  },
-  {
-    "type": "statistic",
-    "start": 10,
-    "end": 20,
-    "data": [
-      { "name": "number", "content": "95%", "showAt": 0 },
-      { "name": "label", "content": "Success Rate", "showAt": 2 }
     ]
   }
 ]
@@ -208,7 +205,18 @@ export const deck = deckbuilder.build();
 
 ---
 
+## 📚 Developer Docs
+
+* [DeckBuilder API](./docs/api.md)
+* [Slide Timing System](./docs/timing.md)
+* [EQ Slide Format](./docs/eq.md)
+
+---
+
 ## 📣 License
 
 ISC License — MIT-compatible
 Built by Taleem.Help
+
+```
+```

@@ -3,7 +3,8 @@
   "type": "module",
   "version": "0.9.0",
   "description": "A json generator for https://taleem.help presentations",
-  "main": "DeckBuilder.js",
+  "main": "index.js",
+
   "scripts": {
 
   },

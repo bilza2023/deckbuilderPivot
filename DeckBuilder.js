@@ -2,7 +2,7 @@
 
 import { Slides } from './Slides.js';
 
-export class DeckBuilder {
+export default class DeckBuilder {
   constructor() {
     this.theme = null;
     this.background = null;
