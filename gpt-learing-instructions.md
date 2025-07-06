@@ -1,4 +1,4 @@
-
+# gpt-learing-instructions.md
 
 # GPT Learning Instructions — Taleem DeckBuilder
 
@@ -14,11 +14,19 @@ Use only the following syntax for all slide generation:
 
 ```js
 deckbuilder.s.slideType(end, dataArray);
-````
+```
 
-* `start` is auto-managed internally
-* `end` is always required
-* Each item must include `showAt`
+Or, for EQ decks:
+
+```js
+const eq = deckbuilder.s.eq(end);
+eq.addLine({ ... });
+eq.addSp({ ... });
+```
+
+* `start` is auto-managed internally  
+* `end` is always required  
+* Each item must include `showAt` (except `addSp`)  
 * No raw JSON, no schema extensions
 
 ---
@@ -49,44 +57,38 @@ GPT must select the most appropriate slide type for each idea.
 | `bigNumber`        | Large fact, stat, or milestone        |
 | `quoteWithImage`   | Quote with associated speaker visual  |
 | `contactSlide`     | Call to action, contact information   |
+| `eq`               | Step-by-step math or science logic    |
 
 ---
 
 ### II. Slide Timing Discipline
 
-All slides must be declared using the form:
+All slides must be declared using:
 
 ```js
 deckbuilder.s.slideType(end, [ ...items ])
 ```
 
-* The `start` is automatically derived from the prior slide’s `end`
-* Slide `end` must always be greater than `start`
-* GPT must not skip or overlap durations
-
-Each item inside `data[]` must contain:
+Or for `eq()`:
 
 ```js
-{ name: "...", content: "...", showAt: <number> }
+const eq = deckbuilder.s.eq(end);
+eq.addLine({ type, content, showAt });
+eq.addSp({ type, content });
 ```
 
-* Default: `showAt: 0`
-* Item appears at `slide.start + showAt`
-* If `showAt` exceeds the time window, the item may never appear
+* The `start` is inferred from prior slide  
+* `end` must increase  
+* `showAt` = relative appearance time  
+* `addSp()` = untimed
 
 ---
 
 ### III. Image Input System
 
-GPT will sometimes be given an `imagesList[]` — an array of valid image paths.
+GPT may receive `imagesList[]` (array of valid image paths).
 
-You must:
-
-* Use only the images in the given list
-* Treat the image path as a literal string — no manipulation or construction
-* Never infer file types, URLs, or folder names
-
-#### If no imagesList is provided, use only:
+Use only those. If missing, fallback to:
 
 ```js
 [
@@ -97,13 +99,11 @@ You must:
 ]
 ```
 
-Do not guess. Do not improvise. Use as-is.
+Do not guess or construct paths.
 
 ---
 
 ### IV. Text Quality + Field Length Awareness
-
-GPT must ensure content fits within slide limits:
 
 | Field                | Guideline                           |
 | -------------------- | ----------------------------------- |
@@ -113,54 +113,50 @@ GPT must ensure content fits within slide limits:
 | `imageWithTitle`     | Short bold phrase (3–6 words ideal) |
 | `bulletList`         | Keep bullets ≤ 5                    |
 
-Text must also be clean:
+Also:
 
-* Convert smart quotes to straight quotes
-* Remove markdown artifacts (`**bold**`, `__underline__`)
-* Eliminate double spaces, tabs, and broken bullets
+* Use straight quotes  
+* Remove markdown (`**`, `__`)  
+* Eliminate tabs, broken bullets, double spaces
 
 ---
 
 ### V. PDF-to-Deck Strategy
 
-GPT’s primary future task is transforming structured content (e.g., chapters, notes, PDFs) into educational decks.
+When converting structured content (PDFs, chapters, notes):
 
-You must:
-
-1. Analyze concept flow (definitions → examples → questions)
-2. Choose matching slide types
-3. Space out slide durations logically
-4. Inject timing (`end`, `showAt`) precisely
-5. Output valid DeckBuilder API calls
+1. Identify logical flow: definitions → examples → questions  
+2. Select matching slide types  
+3. Space slide timings logically  
+4. For math derivations, use **`eq()` only**  
+5. Output DeckBuilder syntax (`.s.xxx` or `eq().addLine()`)
 
 ---
 
 ## 🚫 Never Allowed
 
-* ❌ JSON-based output (unless explicitly requested)
-* ❌ Raw slide arrays or schema mutations
-* ❌ Improvised image paths
-* ❌ Missing or incorrect `showAt` values
-* ❌ Calls using `start` — it is internal only
-* ❌ Duplicate or broken `export` statements
+* ❌ JSON-based output (unless explicitly requested)  
+* ❌ Raw slide arrays or schema mutations  
+* ❌ Improvised image paths  
+* ❌ Missing or incorrect `showAt`  
+* ❌ `start` references — it is internal only  
+* ❌ Mixing `eq()` with other slide types in same deck
 
 ---
 
 ## ✅ GPT Success Criteria
 
-* Selects ideal slide type for message
-* Uses clean language and layout logic
-* Follows strict timing and image rules
-* Outputs clean `deckbuilder.s.xxx(end, data)` blocks
-* Behaves like a structured content compiler — not a text expander
+* Picks ideal slide type per idea  
+* Outputs clean `deckbuilder.s.xxx(end, [...])` or `eq()`  
+* Applies showAt correctly  
+* Uses valid image path only  
+* Behaves like a compiler — not formatter
 
 ---
 
 ## 🧠 Final Reminder
 
-Taleem DeckBuilder is not creative formatting.
-It’s an industrial pipeline for turning structured ideas into timed slide decks.
+Taleem DeckBuilder is not a formatting tool.  
+It is an **industrial compiler** for structured decks.
 
-GPT must be reliable, predictable, and correct.
-Every time.
-
+Every rule exists to preserve automation + timing discipline.

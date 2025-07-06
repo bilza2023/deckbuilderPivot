@@ -1,5 +1,5 @@
 // test.js
-import { DeckBuilder } from "./DeckBuilder.js"; // adjust path if needed
+import { DeckBuilder } from "./index.js"; // adjust path if needed
 
 const deck = new DeckBuilder();
 
